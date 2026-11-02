@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6C5CE7">
-    <!-- خطوط جوجل العالمية -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-    <!-- مكتبة CodeMirror لمحرر الكود -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
 </head>
@@ -23,46 +21,49 @@
         </div>
         <div class="actions">
             <button id="runBtn" class="btn primary">▶ تشغيل</button>
-            <button id="clearBtn" class="btn">🗑 مسح</button>
         </div>
     </header>
 
     <!-- منطقة العمل -->
     <main class="workspace">
-        <!-- المحرر -->
-        <section class="editor-section">
+
+        <!-- ================= شاشة المحرر ================= -->
+        <section id="editorScreen" class="screen active">
             <div class="tabs">
                 <button class="tab active" data-target="html">HTML</button>
                 <button class="tab" data-target="css">CSS</button>
                 <button class="tab" data-target="js">JS</button>
+                <button id="clearBtn" class="icon-btn" title="مسح">🗑</button>
             </div>
             <div class="editor-wrapper">
                 <textarea id="htmlEditor"></textarea>
                 <textarea id="cssEditor"></textarea>
                 <textarea id="jsEditor"></textarea>
             </div>
-        </section>
-
-        <!-- المعاينة -->
-        <section class="preview-section">
-            <div class="preview-header">
-                <span>المعاينة المباشرة</span>
-                <span class="status-dot" id="statusDot"></span>
+            
+            <!-- لوحة الأخطاء (في نفس شاشة المحرر) -->
+            <div class="console-panel" id="consolePanel">
+                <div class="console-header">
+                    <span>⚠️ الأخطاء</span>
+                    <span class="badge" id="errorBadge">0</span>
+                </div>
+                <div class="console-body" id="consoleBody">
+                    <div class="console-msg success">لا توجد أخطاء. الكود سليم ✅</div>
+                </div>
             </div>
-            <iframe id="previewFrame"></iframe>
         </section>
-    </main>
 
-    <!-- لوحة الأخطاء -->
-    <section class="console-section">
-        <div class="console-header">
-            <span>⚠️ الأخطاء والاقتراحات</span>
-            <span class="badge" id="errorBadge">0</span>
-        </div>
-        <div class="console-body" id="consoleBody">
-            <div class="console-msg success">لا توجد أخطاء. الكود سليم ✅</div>
-        </div>
-    </section>
+        <!-- ================= شاشة المعاينة (شاشة كاملة) ================= -->
+        <section id="previewScreen" class="screen">
+            <div class="preview-toolbar">
+                <button id="backBtn" class="btn back-btn">⬅ رجوع للمحرر</button>
+                <span class="preview-title">المعاينة</span>
+                <button id="reloadBtn" class="icon-btn" title="تحديث">🔄</button>
+            </div>
+            <iframe id="previewFrame" sandbox="allow-scripts allow-modals allow-forms"></iframe>
+        </section>
+
+    </main>
 
     <!-- التنبيهات -->
     <div id="toast" class="toast"></div>
@@ -75,11 +76,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closetag.min.js"></script>
     
-    <!-- أكواد التطبيق -->
     <script src="validator.js"></script>
     <script src="app.js"></script>
     <script>
-        // تسجيل Service Worker ليعمل كتطبيق
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js');
         }
