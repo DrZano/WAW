@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Viewer Pro - معاينة الأكواد الاحترافية</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header class="header">
+  <div class="logo">
+    <span class="logo-icon">&lt;/&gt;</span>
+    <span class="logo-text">HTML <b>Viewer Pro</b></span>
+  </div>
+
+  <div class="toolbar">
+    <button id="runBtn" class="btn btn-primary" title="تشغيل الكود (Ctrl+Enter)">
+      ▶ تشغيل
+    </button>
+    <button id="formatBtn" class="btn" title="تنسيق الكود">✨ تنسيق</button>
+    <button id="clearBtn" class="btn" title="مسح الكل">🗑 مسح</button>
+    <button id="themeBtn" class="btn" title="تبديل الثيم">🌓 الثيم</button>
+    <button id="saveBtn" class="btn" title="حفظ محلي">💾 حفظ</button>
+    <button id="downloadBtn" class="btn" title="تحميل HTML">⬇ تحميل</button>
+  </div>
+
+  <div class="device-switch">
+    <button data-device="desktop" class="dev-btn active" title="سطح المكتب">🖥</button>
+    <button data-device="tablet" class="dev-btn" title="تابلت">📱</button>
+    <button data-device="mobile" class="dev-btn" title="موبايل">📞</button>
+  </div>
+</header>
+
+<!-- ===== Main Workspace ===== -->
+<main class="workspace">
+
+  <!-- Editor Side -->
+  <section class="editor-panel">
+    <div class="tabs">
+      <button class="tab active" data-lang="html">HTML</button>
+      <button class="tab" data-lang="css">CSS</button>
+      <button class="tab" data-lang="js">JavaScript</button>
+      <span class="line-info" id="lineInfo">سطر 1، عمود 1</span>
+    </div>
+    <div class="editor-container">
+      <textarea id="htmlEditor"></textarea>
+      <textarea id="cssEditor" style="display:none"></textarea>
+      <textarea id="jsEditor" style="display:none"></textarea>
+    </div>
+  </section>
+
+  <!-- Resizer -->
+  <div class="resizer" id="resizer"></div>
+
+  <!-- Preview Side -->
+  <section class="preview-panel">
+    <div class="preview-header">
+      <span>👁 المعاينة المباشرة</span>
+      <span class="status-dot" id="statusDot"></span>
+    </div>
+    <div class="preview-wrapper" id="previewWrapper">
+      <iframe id="previewFrame" sandbox="allow-scripts allow-modals allow-forms"></iframe>
+    </div>
+  </section>
+</main>
+
+<!-- ===== Console Panel ===== -->
+<section class="console-panel">
+  <div class="console-header">
+    <button class="console-tab active" data-panel="errors">⚠ الأخطاء</button>
+    <button class="console-tab" data-panel="suggestions">💡 اقتراحات</button>
+    <button class="console-tab" data-panel="console">🖥 الكونسول</button>
+    <span class="badge" id="errorCount">0</span>
+  </div>
+  <div class="console-body">
+    <div id="errorsPanel" class="console-content active"></div>
+    <div id="suggestionsPanel" class="console-content"></div>
+    <div id="consolePanel" class="console-content"></div>
+  </div>
+</section>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast"></div>
+
+<!-- CDN Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closetag.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+
+<script src="validator.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
