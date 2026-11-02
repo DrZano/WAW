@@ -1,103 +1,88 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HTML Viewer Pro - معاينة الأكواد الاحترافية</title>
-<link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAW - محرر الأكواد</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6C5CE7">
+    <!-- خطوط جوجل العالمية -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <!-- مكتبة CodeMirror لمحرر الكود -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
 </head>
 <body>
 
-<!-- ===== Header ===== -->
-<header class="header">
-  <div class="logo">
-    <span class="logo-icon">&lt;/&gt;</span>
-    <span class="logo-text">HTML <b>Viewer Pro</b></span>
-  </div>
+    <!-- الشريط العلوي -->
+    <header class="topbar">
+        <div class="logo">
+            <span class="logo-icon">W</span>
+            <span class="logo-text">WAW</span>
+        </div>
+        <div class="actions">
+            <button id="runBtn" class="btn primary">▶ تشغيل</button>
+            <button id="clearBtn" class="btn">🗑 مسح</button>
+        </div>
+    </header>
 
-  <div class="toolbar">
-    <button id="runBtn" class="btn btn-primary" title="تشغيل الكود (Ctrl+Enter)">
-      ▶ تشغيل
-    </button>
-    <button id="formatBtn" class="btn" title="تنسيق الكود">✨ تنسيق</button>
-    <button id="clearBtn" class="btn" title="مسح الكل">🗑 مسح</button>
-    <button id="themeBtn" class="btn" title="تبديل الثيم">🌓 الثيم</button>
-    <button id="saveBtn" class="btn" title="حفظ محلي">💾 حفظ</button>
-    <button id="downloadBtn" class="btn" title="تحميل HTML">⬇ تحميل</button>
-  </div>
+    <!-- منطقة العمل -->
+    <main class="workspace">
+        <!-- المحرر -->
+        <section class="editor-section">
+            <div class="tabs">
+                <button class="tab active" data-target="html">HTML</button>
+                <button class="tab" data-target="css">CSS</button>
+                <button class="tab" data-target="js">JS</button>
+            </div>
+            <div class="editor-wrapper">
+                <textarea id="htmlEditor"></textarea>
+                <textarea id="cssEditor"></textarea>
+                <textarea id="jsEditor"></textarea>
+            </div>
+        </section>
 
-  <div class="device-switch">
-    <button data-device="desktop" class="dev-btn active" title="سطح المكتب">🖥</button>
-    <button data-device="tablet" class="dev-btn" title="تابلت">📱</button>
-    <button data-device="mobile" class="dev-btn" title="موبايل">📞</button>
-  </div>
-</header>
+        <!-- المعاينة -->
+        <section class="preview-section">
+            <div class="preview-header">
+                <span>المعاينة المباشرة</span>
+                <span class="status-dot" id="statusDot"></span>
+            </div>
+            <iframe id="previewFrame"></iframe>
+        </section>
+    </main>
 
-<!-- ===== Main Workspace ===== -->
-<main class="workspace">
+    <!-- لوحة الأخطاء -->
+    <section class="console-section">
+        <div class="console-header">
+            <span>⚠️ الأخطاء والاقتراحات</span>
+            <span class="badge" id="errorBadge">0</span>
+        </div>
+        <div class="console-body" id="consoleBody">
+            <div class="console-msg success">لا توجد أخطاء. الكود سليم ✅</div>
+        </div>
+    </section>
 
-  <!-- Editor Side -->
-  <section class="editor-panel">
-    <div class="tabs">
-      <button class="tab active" data-lang="html">HTML</button>
-      <button class="tab" data-lang="css">CSS</button>
-      <button class="tab" data-lang="js">JavaScript</button>
-      <span class="line-info" id="lineInfo">سطر 1، عمود 1</span>
-    </div>
-    <div class="editor-container">
-      <textarea id="htmlEditor"></textarea>
-      <textarea id="cssEditor" style="display:none"></textarea>
-      <textarea id="jsEditor" style="display:none"></textarea>
-    </div>
-  </section>
+    <!-- التنبيهات -->
+    <div id="toast" class="toast"></div>
 
-  <!-- Resizer -->
-  <div class="resizer" id="resizer"></div>
-
-  <!-- Preview Side -->
-  <section class="preview-panel">
-    <div class="preview-header">
-      <span>👁 المعاينة المباشرة</span>
-      <span class="status-dot" id="statusDot"></span>
-    </div>
-    <div class="preview-wrapper" id="previewWrapper">
-      <iframe id="previewFrame" sandbox="allow-scripts allow-modals allow-forms"></iframe>
-    </div>
-  </section>
-</main>
-
-<!-- ===== Console Panel ===== -->
-<section class="console-panel">
-  <div class="console-header">
-    <button class="console-tab active" data-panel="errors">⚠ الأخطاء</button>
-    <button class="console-tab" data-panel="suggestions">💡 اقتراحات</button>
-    <button class="console-tab" data-panel="console">🖥 الكونسول</button>
-    <span class="badge" id="errorCount">0</span>
-  </div>
-  <div class="console-body">
-    <div id="errorsPanel" class="console-content active"></div>
-    <div id="suggestionsPanel" class="console-content"></div>
-    <div id="consolePanel" class="console-content"></div>
-  </div>
-</section>
-
-<!-- Toast Notification -->
-<div id="toast" class="toast"></div>
-
-<!-- CDN Libraries -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closetag.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
-
-<script src="validator.js"></script>
-<script src="app.js"></script>
+    <!-- سكربتات -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closetag.min.js"></script>
+    
+    <!-- أكواد التطبيق -->
+    <script src="validator.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // تسجيل Service Worker ليعمل كتطبيق
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js');
+        }
+    </script>
 </body>
 </html>
